@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Cantina Inteligente</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --green-50: #f0fdf4;
+            --green-100: #dcfce7;
+            --green-200: #bbf7d0;
+            --green-300: #86efac;
+            --green-400: #4ade80;
+            --green-500: #22c55e;
+            --green-600: #16a34a;
+            --green-700: #15803d;
+            --green-800: #166534;
+            --green-900: #14532d;
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --slate-800: #1e293b;
+            --slate-900: #0f172a;
+            --white: #ffffff;
+            --gradient-green: linear-gradient(135deg, #16a34a 0%, #22c55e 50%, #4ade80 100%);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 50px rgba(0,0,0,0.12);
+            --shadow-2xl: 0 30px 70px rgba(0,0,0,0.15);
+            --shadow-green: 0 8px 30px rgba(22,163,74,0.25);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-2xl: 24px;
+            --radius-full: 9999px;
+            --transition-fast: 0.2s cubic-bezier(0.4,0,0.2,1);
+            --transition-base: 0.3s cubic-bezier(0.4,0,0.2,1);
+            --transition-spring: 0.5s cubic-bezier(0.34,1.56,0.64,1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; font-size: 16px; -webkit-font-smoothing: antialiased; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(160deg, #f0fdf4 0%, #dcfce7 25%, #eff6ff 50%, #f8fafc 75%, #f0fdf4 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Formas abstratas de fundo */
+        .bg-shapes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: floatShape 20s ease-in-out infinite;
+        }
+        .bg-shape-1 { width: 400px; height: 400px; background: rgba(22,163,74,0.15); top: -120px; right: -80px; }
+        .bg-shape-2 { width: 350px; height: 350px; background: rgba(59,130,246,0.12); bottom: -100px; left: -70px; animation-delay: -7s; }
+        .bg-shape-3 { width: 250px; height: 250px; background: rgba(34,197,94,0.1); top: 50%; left: 40%; animation-delay: -14s; }
+        .bg-shape-4 { width: 200px; height: 200px; background: rgba(168,85,247,0.08); bottom: 30%; right: 25%; animation-delay: -5s; }
+        @keyframes floatShape {
+            0%, 100% { transform: translate(0,0) scale(1); }
+            25% { transform: translate(30px,-40px) scale(1.1); }
+            50% { transform: translate(-20px,20px) scale(0.9); }
+            75% { transform: translate(-40px,-20px) scale(1.05); }
+        }
+
+        /* Container principal */
+        .auth-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 460px;
+            padding: 20px;
+        }
+
+        /* Card glass */
+        .auth-card {
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.6);
+            border-radius: var(--radius-2xl);
+            padding: 40px 32px;
+            box-shadow: var(--shadow-2xl), inset 0 1px 0 rgba(255,255,255,0.8);
+            transition: all var(--transition-base);
+            animation: fadeSlideIn 0.5s ease;
+        }
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        .auth-header { text-align: center; margin-bottom: 32px; }
+        .auth-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: var(--gradient-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 28px;
+            color: white;
+            box-shadow: var(--shadow-green);
+            transition: transform var(--transition-spring);
+        }
+        .auth-logo:hover { transform: scale(1.05) rotate(-5deg); }
+        .auth-header h2 { font-size: 1.5rem; font-weight: 700; color: var(--slate-900); margin-bottom: 4px; }
+        .auth-header p { color: var(--slate-500); font-size: 0.9rem; }
+
+        /* Formulário */
+        .auth-form { display: flex; flex-direction: column; gap: 18px; }
+        .input-group { display: flex; flex-direction: column; gap: 6px; }
+        .input-group label { font-weight: 600; font-size: 0.85rem; color: var(--slate-700); }
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            color: var(--slate-400);
+            font-size: 16px;
+            z-index: 1;
+            pointer-events: none;
+            transition: color var(--transition-fast);
+        }
+        .input-wrapper input {
+            width: 100%;
+            padding: 14px 44px 14px 44px;
+            border: 2px solid var(--slate-200);
+            border-radius: var(--radius-md);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--slate-800);
+            background: var(--white);
+            transition: all var(--transition-fast);
+            outline: none;
+        }
+        .input-wrapper input:focus {
+            border-color: var(--green-500);
+            box-shadow: 0 0 0 4px rgba(22,163,74,0.08);
+        }
+        .input-wrapper input:focus ~ .input-icon,
+        .input-wrapper input:focus + .input-icon { color: var(--green-600); }
+        .input-wrapper input.error {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 4px rgba(239,68,68,0.08);
+        }
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--slate-400);
+            padding: 6px;
+            font-size: 16px;
+            transition: color var(--transition-fast);
+            z-index: 1;
+        }
+        .toggle-password:hover { color: var(--slate-600); }
+        .error-msg { font-size: 0.75rem; color: #ef4444; display: none; }
+        .input-wrapper input.error ~ .error-msg { display: block; }
+
+        /* Botão */
+        .btn-auth {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 15px 28px;
+            border-radius: var(--radius-full);
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            background: var(--gradient-green);
+            color: white;
+            box-shadow: var(--shadow-green);
+            transition: all var(--transition-spring);
+            letter-spacing: -0.2px;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-auth:hover { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(22,163,74,0.35); }
+        .btn-auth:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+        .btn-auth .btn-loader { display: none; width: 20px; height: 20px; border: 2.5px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        .btn-auth.loading .btn-text { opacity: 0; }
+        .btn-auth.loading .btn-icon { opacity: 0; }
+        .btn-auth.loading .btn-loader { display: block; position: absolute; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Links */
+        .auth-links { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+        .auth-link { font-size: 0.85rem; color: var(--green-600); font-weight: 500; text-decoration: none; transition: color var(--transition-fast); }
+        .auth-link:hover { color: var(--green-700); text-decoration: underline; }
+        .auth-switch { text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--slate-500); }
+        .auth-switch a { color: var(--green-600); font-weight: 600; text-decoration: none; transition: color var(--transition-fast); }
+        .auth-switch a:hover { color: var(--green-700); text-decoration: underline; }
+
+        /* Botão voltar */
+        .btn-back {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 10;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: var(--radius-full);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border: 2px solid var(--slate-300);
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--slate-700);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+        }
+        .btn-back:hover {
+            border-color: var(--green-500);
+            color: var(--green-700);
+            background: rgba(255,255,255,0.9);
+            transform: translateY(-1px);
+        }
+
+        /* Toast */
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 6000; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            background: white;
+            padding: 16px 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-2xl);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--slate-800);
+            animation: toastIn 0.5s ease forwards, toastOut 0.4s ease 3s forwards;
+            max-width: 400px;
+            border-left: 4px solid var(--green-600);
+        }
+        .toast.error { border-left-color: #ef4444; }
+        .toast i { font-size: 20px; }
+        .toast i.success { color: var(--green-600); }
+        .toast i.error { color: #ef4444; }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(100px); } }
+
+        /* Responsivo */
+        @media (max-width: 480px) {
+            .auth-card { padding: 28px 20px; }
+            .auth-header h2 { font-size: 1.3rem; }
+            .btn-back { top: 12px; left: 12px; padding: 8px 14px; font-size: 0.8rem; }
+            .toast-container { top: 12px; right: 12px; left: 12px; }
+            .toast { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Formas de fundo -->
+    <div class="bg-shapes">
+        <div class="bg-shape bg-shape-1"></div>
+        <div class="bg-shape bg-shape-2"></div>
+        <div class="bg-shape bg-shape-3"></div>
+        <div class="bg-shape bg-shape-4"></div>
+    </div>
+
+    <!-- Botão Voltar -->
+    <a href="index.html" class="btn-back">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+    </a>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Container Principal -->
+    <div class="auth-container">
+
+        <!-- ============ PAINEL DE LOGIN ============ -->
+        <div class="auth-card" id="loginPanel">
+            <div class="auth-header">
+                <div class="auth-logo"><i class="fa-solid fa-seedling"></i></div>
+                <h2>Cantina Inteligente</h2>
+                <p>Faça login para acessar o sistema</p>
+            </div>
+            <form class="auth-form" id="loginForm" autocomplete="off">
+                <!-- Email -->
+                <div class="input-group">
+                    <label for="loginEmail">Email</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-envelope input-icon"></i>
+                        <input type="email" id="loginEmail" placeholder="seu@email.com" required>
+                    </div>
+                    <span class="error-msg">Por favor, informe um email válido.</span>
+                </div>
+
+                <!-- Senha -->
+                <div class="input-group">
+                    <label for="loginPassword">Senha</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="loginPassword" placeholder="••••••••" required minlength="6">
+                        <button type="button" class="toggle-password" onclick="togglePassword('loginPassword', this)">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <span class="error-msg">A senha deve ter no mínimo 6 caracteres.</span>
+                </div>
+
+                <!-- Links -->
+                <div class="auth-links">
+                    <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;color:var(--slate-600);cursor:pointer;">
+                        <input type="checkbox" id="rememberMe" style="accent-color:var(--green-600);"> Lembrar de mim
+                    </label>
+                    <a href="#" class="auth-link" onclick="forgotPassword(event)">Esqueci a senha</a>
+                </div>
+
+                <!-- Botão -->
+                <button type="submit" class="btn-auth">
+                    <span class="btn-icon">🔐</span>
+                    <span class="btn-text">Entrar</span>
+                    <div class="btn-loader"></div>
+                </button>
+            </form>
+
+            <p class="auth-switch">
+                Não tem uma conta? <a href="#" onclick="showRegister(event)">Criar Conta</a>
+            </p>
+        </div>
+
+        <!-- ============ PAINEL DE CADASTRO ============ -->
+        <div class="auth-card" id="registerPanel" style="display:none;">
+            <div class="auth-header">
+                <div class="auth-logo"><i class="fa-solid fa-user-plus"></i></div>
+                <h2>Criar Conta</h2>
+                <p>Cadastre-se na Cantina Inteligente</p>
+            </div>
+            <form class="auth-form" id="registerForm" autocomplete="off">
+                <!-- Nome -->
+                <div class="input-group">
+                    <label for="registerName">Nome Completo</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user input-icon"></i>
+                        <input type="text" id="registerName" placeholder="Seu nome completo" required>
+                    </div>
+                    <span class="error-msg">Por favor, informe seu nome.</span>
+                </div>
+
+                <!-- Email -->
+                <div class="input-group">
+                    <label for="registerEmail">Email</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-envelope input-icon"></i>
+                        <input type="email" id="registerEmail" placeholder="seu@email.com" required>
+                    </div>
+                    <span class="error-msg">Por favor, informe um email válido.</span>
+                </div>
+
+                <!-- Senha -->
+                <div class="input-group">
+                    <label for="registerPassword">Senha</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" required minlength="6">
+                        <button type="button" class="toggle-password" onclick="togglePassword('registerPassword', this)">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <span class="error-msg">A senha deve ter no mínimo 6 caracteres.</span>
+                </div>
+
+                <!-- Confirmar Senha -->
+                <div class="input-group">
+                    <label for="registerConfirmPassword">Confirmar Senha</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="registerConfirmPassword" placeholder="Repita a senha" required minlength="6">
+                        <button type="button" class="toggle-password" onclick="togglePassword('registerConfirmPassword', this)">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <span class="error-msg">As senhas não conferem.</span>
+                </div>
+
+                <!-- Botão -->
+                <button type="submit" class="btn-auth">
+                    <span class="btn-icon">✨</span>
+                    <span class="btn-text">Cadastrar</span>
+                    <div class="btn-loader"></div>
+                </button>
+            </form>
+
+            <p class="auth-switch">
+                Já tem uma conta? <a href="#" onclick="showLogin(event)">Fazer Login</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // ============ FUNÇÕES AUXILIARES ============
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast' + (type === 'error' ? ' error' : '');
+            const iconClass = type === 'success' ? 'fa-circle-check success' : 'fa-circle-exclamation error';
+            toast.innerHTML = `<i class="fa-solid ${iconClass}"></i> ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
+        }
+
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            const icon = button.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        // ============ NAVEGAÇÃO ENTRE PAINÉIS ============
+        function showRegister(event) {
+            if (event) event.preventDefault();
+            const loginPanel = document.getElementById('loginPanel');
+            const registerPanel = document.getElementById('registerPanel');
+            loginPanel.style.display = 'none';
+            registerPanel.style.display = 'block';
+            registerPanel.style.animation = 'none';
+            registerPanel.offsetHeight;
+            registerPanel.style.animation = 'fadeSlideIn 0.4s ease';
+        }
+
+        function showLogin(event) {
+            if (event) event.preventDefault();
+            const loginPanel = document.getElementById('loginPanel');
+            const registerPanel = document.getElementById('registerPanel');
+            registerPanel.style.display = 'none';
+            loginPanel.style.display = 'block';
+            loginPanel.style.animation = 'none';
+            loginPanel.offsetHeight;
+            loginPanel.style.animation = 'fadeSlideIn 0.4s ease';
+        }
+
+        // ============ ESQUECI SENHA ============
+        function forgotPassword(event) {
+            if (event) event.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showToast('📧 Link de recuperação enviado para ' + email, 'success');
+            } else {
+                showToast('⚠️ Por favor, informe um email válido no campo acima.', 'error');
+                document.getElementById('loginEmail').focus();
+            }
+        }
+
+        // ============ VALIDAÇÃO DE LOGIN ============
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('loginEmail');
+            const password = document.getElementById('loginPassword');
+            let isValid = true;
+
+            // Resetar erros
+            [email, password].forEach(el => el.classList.remove('error'));
+
+            // Validar email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email.value.trim() || !emailRegex.test(email.value.trim())) {
+                email.classList.add('error');
+                isValid = false;
+            }
+
+            // Validar senha
+            if (!password.value.trim() || password.value.trim().length < 6) {
+                password.classList.add('error');
+                isValid = false;
+            }
+
+            if (isValid) {
+                const btn = this.querySelector('.btn-auth');
+                btn.classList.add('loading');
+                btn.disabled = true;
+
+                // Simular autenticação
+                setTimeout(() => {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+
+                    // Salvar usuário no localStorage
+                    const user = {
+                        isLogged: true,
+                        username: email.value.split('@')[0],
+                        email: email.value,
+                        loginTime: new Date().toISOString()
+                    };
+
+                    // Verificar "Lembrar de mim"
+                    const rememberMe = document.getElementById('rememberMe').checked;
+                    if (rememberMe) {
+                        localStorage.setItem('rememberedUser', JSON.stringify({ email: email.value }));
+                    } else {
+                        localStorage.removeItem('rememberedUser');
+                    }
+
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    showToast('✅ Login realizado com sucesso! Redirecionando...', 'success');
+
+                    // Redirecionar para a página principal
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1000);
+                }, 1500);
+            } else {
+                // Focar no primeiro campo com erro
+                const firstError = this.querySelector('.error');
+                if (firstError) firstError.focus();
+                showToast('⚠️ Por favor, corrija os campos destacados.', 'error');
+            }
+        });
+
+        // ============ VALIDAÇÃO DE CADASTRO ============
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('registerName');
+            const email = document.getElementById('registerEmail');
+            const password = document.getElementById('registerPassword');
+            const confirmPassword = document.getElementById('registerConfirmPassword');
+            let isValid = true;
+
+            // Resetar erros
+            [name, email, password, confirmPassword].forEach(el => el.classList.remove('error'));
+
+            // Validar nome
+            if (!name.value.trim() || name.value.trim().length < 2) {
+                name.classList.add('error');
+                isValid = false;
+            }
+
+            // Validar email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email.value.trim() || !emailRegex.test(email.value.trim())) {
+                email.classList.add('error');
+                isValid = false;
+            }
+
+            // Validar senha
+            if (!password.value.trim() || password.value.trim().length < 6) {
+                password.classList.add('error');
+                isValid = false;
+            }
+
+            // Validar confirmação
+            if (password.value.trim() !== confirmPassword.value.trim()) {
+                confirmPassword.classList.add('error');
+                isValid = false;
+            }
+
+            if (isValid) {
+                const btn = this.querySelector('.btn-auth');
+                btn.classList.add('loading');
+                btn.disabled = true;
+
+                // Simular cadastro
+                setTimeout(() => {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+
+                    showToast('✅ Cadastro realizado com sucesso! Faça login para continuar.', 'success');
+
+                    // Limpar formulário
+                    this.reset();
+
+                    // Voltar para o login
+                    setTimeout(() => {
+                        showLogin();
+                        // Preencher email automaticamente
+                        document.getElementById('loginEmail').value = email.value;
+                    }, 1000);
+                }, 1500);
+            } else {
+                const firstError = this.querySelector('.error');
+                if (firstError) firstError.focus();
+                showToast('⚠️ Por favor, corrija os campos destacados.', 'error');
+            }
+        });
+
+        // ============ REMOVER ERROS AO DIGITAR ============
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.classList.contains('error')) {
+                    this.classList.remove('error');
+                }
+            });
+        });
+
+        // ============ CARREGAR EMAIL LEMBRADO ============
+        window.addEventListener('DOMContentLoaded', function() {
+            const rememberedUser = JSON.parse(localStorage.getItem('rememberedUser'));
+            if (rememberedUser && rememberedUser.email) {
+                document.getElementById('loginEmail').value = rememberedUser.email;
+                document.getElementById('rememberMe').checked = true;
+            }
+
+            // Verificar se já está logado
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser && currentUser.isLogged) {
+                showToast('👋 Você já está logado! Redirecionando...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+            }
+        });
+
+        // ============ TECLA ENTER PARA LOGIN RÁPIDO ============
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.getElementById('loginPanel').style.display !== 'none') {
+                const email = document.getElementById('loginEmail');
+                const password = document.getElementById('loginPassword');
+                if (document.activeElement === email) {
+                    password.focus();
+                }
+            }
+        });
+
+        console.log('%c🔐 Cantina Inteligente %c| %cSistema de Autenticação',
+            'font-weight:bold;color:#16a34a;', '', 'color:#64748b;');
+        console.log('%cLogin e Cadastro prontos para uso.', 'color:#94a3b8;font-style:italic;');
+    </script>
+</body>
+</html>
